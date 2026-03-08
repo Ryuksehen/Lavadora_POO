@@ -18,7 +18,7 @@ class SonidosLavadora:
         try:
             winsound.PlaySound(ruta, winsound.SND_FILENAME)
         except:
-            print(f"⚠️ No se encontró el sonido: {ruta}")
+            print(f"No se encontró el sonido: {ruta}")
 
 
     # SONIDOS GENERALES

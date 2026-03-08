@@ -13,9 +13,7 @@ class Reportes:
         if not os.path.exists(Reportes.CARPETA):
             os.makedirs(Reportes.CARPETA)
 
-    # --------------------------------
     # FACTURA CLIENTE
-    # --------------------------------
     @staticmethod
     def generar_factura_txt(datos):
 
@@ -49,9 +47,7 @@ class Reportes:
 
         print("✔ factura.txt generada")
 
-    # --------------------------------
     # REPORTE ADMINISTRADOR
-    # --------------------------------
     @staticmethod
     def generar_excel(datos):
 

@@ -4,9 +4,7 @@ from LavadoraInteligente import LavadoraInteligente
 
 class SistemaLavaSmart:
 
-    # -----------------------------
     # Validar nombre
-    # -----------------------------
     def pedir_nombre(self):
 
         while True:
@@ -29,9 +27,7 @@ class SistemaLavaSmart:
                 print("\nOperación cancelada por el usuario")
                 exit()
 
-    # -----------------------------
     # Validar kilos
-    # -----------------------------
     def pedir_kilos(self):
 
         while True:
@@ -57,9 +53,7 @@ class SistemaLavaSmart:
                 print("\nOperación cancelada")
                 exit()
 
-    # -----------------------------
     # Validar tipo de ropa
-    # -----------------------------
     def pedir_tipo_ropa(self):
 
         tipos_validos = ["normal", "interior", "pijamas", "vestidos"]
@@ -85,9 +79,7 @@ class SistemaLavaSmart:
                 print("\nOperación cancelada")
                 exit()
 
-    # -----------------------------
     # Validar estrato
-    # -----------------------------
     def pedir_estrato(self):
 
         while True:
@@ -113,9 +105,7 @@ class SistemaLavaSmart:
                 print("\nOperación cancelada")
                 exit()
 
-    # -----------------------------
     # Tipo de lavadora
-    # -----------------------------
     def pedir_tipo_lavadora(self):
 
         while True:
@@ -141,9 +131,7 @@ class SistemaLavaSmart:
                 print("\nOperación cancelada")
                 exit()
 
-    # -----------------------------
     # Sistema principal
-    # -----------------------------
     def iniciar(self):
 
         print("\n========= SISTEMA LAVA SMART =========\n")

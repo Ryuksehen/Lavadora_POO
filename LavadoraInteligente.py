@@ -5,9 +5,9 @@ import time
 
 class LavadoraInteligente(LavadoraBase):
 
-    # -----------------------------
+    
     # Constructor
-    # -----------------------------
+    
     def __init__(self, kilos, tipo_ropa, estrato):
 
         super().__init__(kilos, tipo_ropa, estrato, "inteligente")
@@ -15,9 +15,9 @@ class LavadoraInteligente(LavadoraBase):
         self._wifi = False
         self._sensores = True
 
-    # -----------------------------
+    
     # Detección automática de ropa
-    # -----------------------------
+    
     def detectar_tipo_ropa(self):
 
         print("\n🔍 Sensores analizando tipo de ropa...")
@@ -81,7 +81,7 @@ class LavadoraInteligente(LavadoraBase):
 
     # -----------------------------
     # Opciones de lavado inteligente
-    # -----------------------------
+    
     def mostrar_opciones_lavado(self):
 
         print("\nOpciones inteligentes disponibles")
@@ -129,9 +129,9 @@ class LavadoraInteligente(LavadoraBase):
                 print("\nSelección cancelada")
                 return
 
-    # -----------------------------
+    
     # Lavado inteligente
-    # -----------------------------
+    
     def lavar(self):
 
         print("\nModo de lavado: INTELIGENTE")

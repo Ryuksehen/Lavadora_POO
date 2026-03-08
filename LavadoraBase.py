@@ -6,9 +6,7 @@ from datetime import datetime
 
 class LavadoraBase:
 
-    # -----------------------------
     # Constantes del sistema
-    # -----------------------------
 
     PRECIO_KILO = 10000
     AUMENTO_ESPECIAL = 0.05
@@ -25,9 +23,7 @@ class LavadoraBase:
 
     PRENDAS_ESPECIALES = ["interior", "pijamas", "vestidos"]
 
-    # -----------------------------
     # Constructor
-    # -----------------------------
 
     def __init__(self, kilos, tipo_ropa, estrato, tipo_lavadora="estandar"):
 
@@ -43,9 +39,7 @@ class LavadoraBase:
 
         self._ultimo_sonido = None
 
-    # -----------------------------
     # Encender lavadora
-    # -----------------------------
 
     def encender(self):
 
@@ -57,18 +51,13 @@ class LavadoraBase:
 
         SonidosLavadora.encender(self._tipo_lavadora)
 
-    # -----------------------------
     # Validación kilos
-    # -----------------------------
-
     def _validar_kilos(self):
 
         if self._kilos < 5 or self._kilos > 40:
             raise ValueError("Los kilos deben estar entre 5 y 40")
 
-    # -----------------------------
     # Llenado del tanque
-    # -----------------------------
 
     def _llenar(self):
 
@@ -79,15 +68,13 @@ class LavadoraBase:
 
         for i in range(3):
 
-            print("💧 Llenando agua...", i + 1)
+            print("Llenando agua...", i + 1)
 
             time.sleep(1)
 
         print("Tanque lleno")
 
-    # -----------------------------
     # Control del ciclo
-    # -----------------------------
 
     def _control_ciclo(self):
 
@@ -153,10 +140,8 @@ class LavadoraBase:
             else:
 
                 print("Opción inválida")
-
-    # -----------------------------
+                
     # Simulación del tambor
-    # -----------------------------
 
     def _simular_tambor(self):
 
@@ -179,17 +164,16 @@ class LavadoraBase:
 
         return True
 
-    # -----------------------------
+    
     # Lavado (polimorfismo)
-    # -----------------------------
 
     def lavar(self):
 
         raise NotImplementedError("Debe ser implementado por las clases hijas")
 
-    # -----------------------------
+    
     # Enjuague
-    # -----------------------------
+    
 
     def _enjuagar(self):
 
@@ -202,9 +186,9 @@ class LavadoraBase:
 
         print("Ropa enjuagada")
 
-    # -----------------------------
+    
     # Secado
-    # -----------------------------
+    
 
     def _secar(self):
 
@@ -217,9 +201,9 @@ class LavadoraBase:
 
         print("Ropa seca")
 
-    # -----------------------------
+    
     # Cálculo de costos
-    # -----------------------------
+    
 
     def __calcular_costos(self):
 
@@ -235,9 +219,9 @@ class LavadoraBase:
 
         return costo_base, costo_con_iva, utilidad
 
-    # -----------------------------
+    
     # Cálculo consumo energía
-    # -----------------------------
+    
 
     def __calcular_consumo_energia(self):
 
@@ -249,9 +233,9 @@ class LavadoraBase:
 
         return costo
 
-    # -----------------------------
+    
     # Reporte cliente
-    # -----------------------------
+    
 
     def _mostrar_reporte_cliente(self, nombre):
 
@@ -316,9 +300,9 @@ class LavadoraBase:
         Reportes.generar_factura_txt(datos)
         Reportes.generar_excel(datos)
         
-    # -----------------------------
+    
     # Ciclo completo
-    # -----------------------------
+    
 
     def ciclo_terminado(self, nombre):
 
