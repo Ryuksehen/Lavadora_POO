@@ -1,5 +1,7 @@
 import time
 from SonidosLavadora import SonidosLavadora
+from Reportes import Reportes
+from datetime import datetime
 
 
 class LavadoraBase:
@@ -253,24 +255,67 @@ class LavadoraBase:
 
     def _mostrar_reporte_cliente(self, nombre):
 
-        costo_base, costo_final, utilidad = self.__calcular_costos()
+        costo_base = self._kilos * self.PRECIO_KILO
+
+        recargo = 0
+
+        if self._tipo_ropa in self.PRENDAS_ESPECIALES:
+            recargo = costo_base * self.AUMENTO_ESPECIAL
+
+        subtotal = costo_base + recargo
+
+        iva = subtotal * self.IVA
+
+        total = subtotal + iva
+
+        ganancia = costo_base * 0.30
 
         energia = self.__calcular_consumo_energia()
+
+        fecha = datetime.now().strftime("%d/%m/%Y %H:%M")
+
+        metodo = "Inteligente" if self._tipo_lavadora == "inteligente" else "Estándar"
 
         print("\n========== REPORTE CLIENTE ==========")
 
         print("Cliente:", nombre)
+        print("Fecha:", fecha)
+
         print("Kilos lavados:", self._kilos)
         print("Tipo de prenda:", self._tipo_ropa)
+        print("Método de lavado:", metodo)
 
-        print("Costo base:", round(costo_base, 2))
-        print("Total con IVA:", round(costo_final, 2))
-        print("Costo energía:", round(energia, 2))
+        print("Costo por kilo:", self.PRECIO_KILO)
 
-        print("Utilidad empresa:", round(utilidad, 2))
+        print("Costo sin IVA:", round(costo_base, 2))
+
+        if recargo > 0:
+            print("Recargo prenda especial:", round(recargo, 2))
+
+        print("IVA:", round(iva, 2))
+
+        print("TOTAL A PAGAR:", round(total, 2))
 
         print("\nGracias por usar Lava Smart")
 
+        datos = {
+            "cliente": nombre,
+            "fecha": fecha,
+            "kilos": self._kilos,
+            "tipo_ropa": self._tipo_ropa,
+            "metodo": metodo,
+            "precio_kilo": self.PRECIO_KILO,
+            "costo_base": round(costo_base, 2),
+            "recargo": round(recargo, 2),
+            "iva": round(iva, 2),
+            "total": round(total, 2),
+            "ganancia": round(ganancia, 2),
+            "energia": round(energia, 2)
+        }
+
+        Reportes.generar_factura_txt(datos)
+        Reportes.generar_excel(datos)
+        
     # -----------------------------
     # Ciclo completo
     # -----------------------------

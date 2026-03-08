@@ -1,0 +1,18 @@
+========== LAVA SMART ==========
+         COMPROBANTE
+
+Cliente: sadas
+Fecha: 07/03/2026 16:10
+
+Kilos lavados: 23.0
+Tipo de prenda: pijamas
+Método de lavado: Estándar
+
+Costo por kilo: $10000
+Costo sin IVA: $230000.0
+Recargo prenda especial (5%): $11500.0
+IVA (19%): $45885.0
+
+TOTAL A PAGAR: $287385.0
+
+Gracias por usar Lava Smart
