@@ -56,28 +56,39 @@ class SistemaLavaSmart:
     # Validar tipo de ropa
     def pedir_tipo_ropa(self):
 
-        tipos_validos = ["normal", "interior", "pijamas", "vestidos"]
+        mapa = {
+            "n": "normal",
+            "normal": "normal",
+            "i": "interior",
+            "interior": "interior",
+            "p": "pijamas",
+            "pijamas": "pijamas",
+            "v": "vestidos",
+            "vestidos": "vestidos"
+        }
 
         while True:
 
             try:
 
                 tipo = input(
-                    "Tipo de ropa (normal | interior | pijamas | vestidos): "
-                ).lower()
+                    "\nTipo de ropa\n"
+                    "N → Normal\n"
+                    "I → Interior\n"
+                    "P → Pijamas\n"
+                    "V → Vestidos\n"
+                    "Seleccione: "
+                ).strip().lower()
 
-                if tipo not in tipos_validos:
+                if tipo in mapa:
+                    return mapa[tipo]
 
-                    print("Tipo de ropa inválido")
-
-                else:
-
-                    return tipo
+                print("Tipo de ropa inválido. Introduce un valor valido.")
 
             except (EOFError, KeyboardInterrupt):
 
-                print("\nOperación cancelada")
-                exit()
+                print("\nEntrada cancelada. Intente nuevamente.")
+                continue
 
     # Validar estrato
     def pedir_estrato(self):
@@ -112,29 +123,30 @@ class SistemaLavaSmart:
 
             try:
 
-                tipo = int(input("Tipo de lavadora (1 = Estándar | 2 = Inteligente): "))
+                tipo = input(
+                    "Tipo de lavadora (1 = Estándar | 2 = Inteligente: "
+                ).strip().lower()
 
-                if tipo not in [1, 2]:
+                if tipo in ["1", "e"]:
+                    return 1
 
-                    print("Opción inválida")
+                elif tipo in ["2", "i"]:
+                    return 2
 
                 else:
-
-                    return tipo
-
-            except ValueError:
-
-                print("Ingrese 1 o 2")
+                    print("Opción inválida. Introduce un valor valido.")
 
             except (EOFError, KeyboardInterrupt):
 
-                print("\nOperación cancelada")
-                exit()
+                print("\nEntrada cancelada. Intente nuevamente.")
+                continue
 
     # Sistema principal
     def iniciar(self):
 
-        print("\n========= SISTEMA LAVA SMART =========\n")
+        print("\n" + "="*40)
+        print("        SISTEMA LAVA SMART")
+        print("="*40)
 
         nombre = self.pedir_nombre()
 

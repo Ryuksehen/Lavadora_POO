@@ -1,12 +1,11 @@
-import time
 from SonidosLavadora import SonidosLavadora
-from Reportes import Reportes
+import time
 from datetime import datetime
+import msvcrt
+from Reportes import Reportes
 
 
 class LavadoraBase:
-
-    # Constantes del sistema
 
     PRECIO_KILO = 10000
     AUMENTO_ESPECIAL = 0.05
@@ -23,23 +22,47 @@ class LavadoraBase:
 
     PRENDAS_ESPECIALES = ["interior", "pijamas", "vestidos"]
 
-    # Constructor
-
     def __init__(self, kilos, tipo_ropa, estrato, tipo_lavadora="estandar"):
 
         self._kilos = kilos
         self._tipo_ropa = tipo_ropa
         self._estrato = estrato
-
         self._tipo_lavadora = tipo_lavadora
 
         self._tiempo_lavado = 20
-
         self.__estado = "apagada"
-
         self._ultimo_sonido = None
 
-    # Encender lavadora
+    # FUNCIONES AUXILIARES
+
+    def _leer_tecla(self):
+
+        tecla = msvcrt.getch()
+
+        if tecla == b'\r' or tecla == b'1':
+            return "continuar"
+
+        elif tecla == b'\t' or tecla == b'2':
+            return "pausar"
+
+        elif tecla == b'\x1b' or tecla == b'3':
+            return "finalizar"
+
+        else:
+            return "otra"
+
+    def _validar_sn(self, pregunta):
+
+        while True:
+
+            respuesta = input(pregunta).strip().lower()
+
+            if respuesta in ["s", "n"]:
+                return respuesta
+
+            print("Entrada inválida. Solo escriba S o N.")
+
+    # ENCENDER
 
     def encender(self):
 
@@ -51,13 +74,17 @@ class LavadoraBase:
 
         SonidosLavadora.encender(self._tipo_lavadora)
 
-    # Validación kilos
+        print("Seleccionando programa de lavado...")
+        SonidosLavadora.seleccionar_programa(self._tipo_lavadora)
+
+    # VALIDAR KILOS
+
     def _validar_kilos(self):
 
         if self._kilos < 5 or self._kilos > 40:
             raise ValueError("Los kilos deben estar entre 5 y 40")
 
-    # Llenado del tanque
+    # LLENADO
 
     def _llenar(self):
 
@@ -69,87 +96,73 @@ class LavadoraBase:
         for i in range(3):
 
             print("Llenando agua...", i + 1)
-
             time.sleep(1)
 
         print("Tanque lleno")
 
-    # Control del ciclo
+    # CONTROL DEL CICLO (TECLAS)
 
     def _control_ciclo(self):
 
-        while True:
+        print("\nControles:")
+        print("1  → Continuar")
+        print("2  → Pausar")
+        print("3  → Finalizar")
 
-            print("\nControl de ciclo")
+        accion = self._leer_tecla()
 
-            print("1. Continuar")
-            print("2. Pausar")
-            print("3. Finalizar ciclo")
+        if accion == "continuar":
+            return "continuar"
 
-            try:
+        elif accion == "pausar":
 
-                opcion = input("Seleccione una opción: ")
+            self.__estado = "pausada"
+            SonidosLavadora.pausa(self._tipo_lavadora)
 
-            except (EOFError, KeyboardInterrupt):
+            print("\n⏸ Lavadora en pausa")
+            print("1  → Reanudar")
+            print("3     → Cancelar")
 
-                print("\nOperación cancelada por el usuario")
+            while True:
 
-                return "finalizar"
+                accion = self._leer_tecla()
 
-            if opcion == "1":
-
-                return "continuar"
-
-            elif opcion == "2":
-
-                self.__estado = "pausada"
-
-                SonidosLavadora.pausa(self._tipo_lavadora)
-
-                print("\nLavadora en pausa")
-
-                print("1. Reanudar")
-                print("2. Finalizar ciclo")
-
-                op = input("Seleccione opción: ")
-
-                if op == "1":
+                if accion == "continuar":
 
                     self.__estado = "lavando"
 
                     SonidosLavadora.reanudar(self._tipo_lavadora)
 
                     if self._ultimo_sonido:
-
-                        SonidosLavadora.reproducir(self._tipo_lavadora, self._ultimo_sonido)
+                        SonidosLavadora.reproducir(
+                            self._tipo_lavadora,
+                            self._ultimo_sonido
+                        )
 
                     return "continuar"
 
-                else:
+                elif accion == "finalizar":
 
                     print("Ciclo cancelado")
-
                     return "finalizar"
 
-            elif opcion == "3":
+        elif accion == "finalizar":
 
-                print("Ciclo cancelado por el usuario")
+            print("Ciclo cancelado por el usuario")
+            return "finalizar"
 
-                return "finalizar"
-
-            else:
-
-                print("Opción inválida")
-                
-    # Simulación del tambor
+    # SIMULACIÓN DEL TAMBOR
 
     def _simular_tambor(self):
 
         self.__estado = "lavando"
+        
+        print("\nIniciando ciclo de lavado...")
+        SonidosLavadora.inicioLavado(self._tipo_lavadora)
 
         for ciclo in range(5):
 
-            print("\n🌀 Girando tambor... ciclo", ciclo + 1)
+            print("\n Girando tambor... ciclo", ciclo + 1)
 
             SonidosLavadora.lavado(self._tipo_lavadora)
             self._ultimo_sonido = "lavado"
@@ -159,23 +172,35 @@ class LavadoraBase:
             estado = self._control_ciclo()
 
             if estado == "finalizar":
-
                 return False
+
+        print("\nDrenando agua...")
+        SonidosLavadora.drenado(self._tipo_lavadora)
+
+        time.sleep(2)
 
         return True
 
-    
-    # Lavado (polimorfismo)
+    # LAVADO (POLIMORFISMO)
 
     def lavar(self):
+        raise NotImplementedError(
+            "Debe ser implementado por las clases hijas"
+        )
 
-        raise NotImplementedError("Debe ser implementado por las clases hijas")
-
-    
-    # Enjuague
-    
+    # ENJUAGUE CON TECLAS
 
     def _enjuagar(self):
+
+        print("\n¿Desea enjuagar la ropa?")
+        print("S → Sí")
+        print("N → No")
+
+        tecla = self._leer_tecla()
+
+        if tecla == "esc":
+            print("Enjuague omitido")
+            return
 
         print("\nIniciando enjuague")
 
@@ -185,10 +210,13 @@ class LavadoraBase:
         time.sleep(2)
 
         print("Ropa enjuagada")
+        
+        print("\nIniciando centrifugado...")
+        SonidosLavadora.centrifugado(self._tipo_lavadora)
 
-    
-    # Secado
-    
+        time.sleep(2)
+
+    # SECADO
 
     def _secar(self):
 
@@ -201,27 +229,7 @@ class LavadoraBase:
 
         print("Ropa seca")
 
-    
-    # Cálculo de costos
-    
-
-    def __calcular_costos(self):
-
-        costo_base = self._kilos * self.PRECIO_KILO
-
-        if self._tipo_ropa in self.PRENDAS_ESPECIALES:
-
-            costo_base *= (1 + self.AUMENTO_ESPECIAL)
-
-        costo_con_iva = costo_base * (1 + self.IVA)
-
-        utilidad = costo_base * 0.30
-
-        return costo_base, costo_con_iva, utilidad
-
-    
-    # Cálculo consumo energía
-    
+    # CONSUMO ENERGÍA
 
     def __calcular_consumo_energia(self):
 
@@ -233,9 +241,7 @@ class LavadoraBase:
 
         return costo
 
-    
-    # Reporte cliente
-    
+    # REPORTE CLIENTE
 
     def _mostrar_reporte_cliente(self, nombre):
 
@@ -247,13 +253,10 @@ class LavadoraBase:
             recargo = costo_base * self.AUMENTO_ESPECIAL
 
         subtotal = costo_base + recargo
-
         iva = subtotal * self.IVA
-
         total = subtotal + iva
 
         ganancia = costo_base * 0.30
-
         energia = self.__calcular_consumo_energia()
 
         fecha = datetime.now().strftime("%d/%m/%Y %H:%M")
@@ -264,20 +267,17 @@ class LavadoraBase:
 
         print("Cliente:", nombre)
         print("Fecha:", fecha)
-
         print("Kilos lavados:", self._kilos)
         print("Tipo de prenda:", self._tipo_ropa)
         print("Método de lavado:", metodo)
 
         print("Costo por kilo:", self.PRECIO_KILO)
-
         print("Costo sin IVA:", round(costo_base, 2))
 
         if recargo > 0:
             print("Recargo prenda especial:", round(recargo, 2))
 
         print("IVA:", round(iva, 2))
-
         print("TOTAL A PAGAR:", round(total, 2))
 
         print("\nGracias por usar Lava Smart")
@@ -299,10 +299,8 @@ class LavadoraBase:
 
         Reportes.generar_factura_txt(datos)
         Reportes.generar_excel(datos)
-        
-    
-    # Ciclo completo
-    
+
+    # CICLO COMPLETO
 
     def ciclo_terminado(self, nombre):
 
@@ -315,23 +313,15 @@ class LavadoraBase:
             continuar = self.lavar()
 
             if continuar is False:
-
                 return
 
             self._enjuagar()
 
-            try:
+            secar = self._validar_sn(
+                "¿Desea secar la ropa? (s/n): "
+            )
 
-                secar = input("¿Desea secar la ropa? (s/n): ")
-
-            except (EOFError, KeyboardInterrupt):
-
-                print("\nProceso interrumpido")
-
-                return
-
-            if secar.lower() == "s":
-
+            if secar == "s":
                 self._secar()
 
             SonidosLavadora.fin(self._tipo_lavadora)
@@ -346,4 +336,5 @@ class LavadoraBase:
 
         except Exception as e:
 
+            SonidosLavadora.reproducir(self._tipo_lavadora, "error")
             print("Error en el ciclo:", e)

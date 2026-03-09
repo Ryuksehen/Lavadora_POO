@@ -1,9 +1,8 @@
 import winsound
 import os
 
-
+# Esta clase se encarga de reproducir los sonidos de la lavadora
 class SonidosLavadora:
-
     BASE_PATH = "Sonidos"
 
     @staticmethod
@@ -12,12 +11,11 @@ class SonidosLavadora:
         tipo = estandar / inteligente
         sonido = nombre del archivo
         """
-
         ruta = os.path.join(SonidosLavadora.BASE_PATH, tipo, f"{sonido}.wav")
-
+        
         try:
             winsound.PlaySound(ruta, winsound.SND_FILENAME)
-        except:
+        except Exception:
             print(f"No se encontró el sonido: {ruta}")
 
 
@@ -34,6 +32,10 @@ class SonidosLavadora:
     @staticmethod
     def llenado(tipo):
         SonidosLavadora.reproducir(tipo, "llenado")
+        
+    @staticmethod
+    def inicioLavado(tipo):
+        SonidosLavadora.reproducir(tipo, "inicioLavado")
 
     @staticmethod
     def lavado(tipo):
@@ -66,3 +68,11 @@ class SonidosLavadora:
     @staticmethod
     def fin(tipo):
         SonidosLavadora.reproducir(tipo, "fin")
+        
+    @staticmethod
+    def error(tipo):
+        SonidosLavadora.reproducir(tipo, "error")
+
+    @staticmethod
+    def wifi(tipo):
+        SonidosLavadora.reproducir(tipo, "wifi")

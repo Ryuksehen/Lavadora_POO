@@ -1,21 +1,43 @@
 from SistemaLavaSmart import SistemaLavaSmart
+import os
 
 
 def main():
+    while True:
+        
 
-    try:
+        try:
 
-        sistema = SistemaLavaSmart()
+            sistema = SistemaLavaSmart()
 
-        sistema.iniciar()
+            sistema.iniciar()
 
-    except KeyboardInterrupt:
+        except KeyboardInterrupt:
 
-        print("\n\nSistema cancelado por el usuario.")
+            print("\n\nSistema cancelado por el usuario.")
+            return
 
-    except Exception as error:
+        except Exception as error:
 
-        print("\nError inesperado en el sistema:", error)
+            print("\nError inesperado en el sistema:", error)
+            
+        
+        while True:
+            continuar = input('¿Desea usar la lavadora para otro cliente?')
+            
+            if continuar == 's':
+                
+                os.system("\nReiniciando sitema...\n")
+                break
+            
+            elif continuar == "n":
+
+                print("\nSistema finalizado. Gracias por usar Lava Smart.")
+                return
+
+            else:
+
+                print("Entrada inválida. Solo escriba S o N.")
 
 
 if __name__ == "__main__":

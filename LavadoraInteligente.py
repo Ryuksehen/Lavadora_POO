@@ -14,13 +14,13 @@ class LavadoraInteligente(LavadoraBase):
 
         self._wifi = False
         self._sensores = True
-
+ 
     
     # Detección automática de ropa
     
     def detectar_tipo_ropa(self):
 
-        print("\n🔍 Sensores analizando tipo de ropa...")
+        print("\nSensores analizando tipo de ropa...")
 
         time.sleep(2)
 
@@ -44,9 +44,7 @@ class LavadoraInteligente(LavadoraBase):
             print("Modo inteligente estándar")
             self._tiempo_lavado = 20
 
-    # -----------------------------
     # Conexión WiFi
-    # -----------------------------
     def conectar_wifi(self):
 
         print("\nConexión remota de la lavadora")
@@ -69,7 +67,10 @@ class LavadoraInteligente(LavadoraBase):
 
                 self._wifi = True
 
-                print("\n📡 Lavadora conectada a la red:", red)
+                print("\nLavadora conectada a la red:", red)
+
+                SonidosLavadora.reproducir(self._tipo_lavadora, "wifi")
+
                 print("Ahora puede controlar la lavadora desde su dispositivo")
 
                 return
@@ -79,12 +80,12 @@ class LavadoraInteligente(LavadoraBase):
                 print("\nConexión WiFi cancelada")
                 return
 
-    # -----------------------------
     # Opciones de lavado inteligente
     
     def mostrar_opciones_lavado(self):
 
         print("\nOpciones inteligentes disponibles")
+        SonidosLavadora.seleccionar_programa(self._tipo_lavadora)
 
         print("1. Lavado ecológico")
         print("2. Lavado profundo")
@@ -139,19 +140,17 @@ class LavadoraInteligente(LavadoraBase):
         if not self._wifi:
             self.conectar_wifi()
 
-        if self._sensores:
-            self.detectar_tipo_ropa()
-
         self.mostrar_opciones_lavado()
 
-        SonidosLavadora.lavado(self._tipo_lavadora)
-        self._ultimo_sonido = "lavado"
 
         print("\nIniciando ciclo inteligente optimizado...")
+        
 
         continuar = self._simular_tambor()
 
         if not continuar:
+            
+            SonidosLavadora.reproducir(self._tipo_lavadora, "error")
 
             print("Lavado cancelado por el usuario")
             return False
