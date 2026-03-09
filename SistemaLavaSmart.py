@@ -1,10 +1,10 @@
 from LavadoraEstandar import LavadoraEstandar
 from LavadoraInteligente import LavadoraInteligente
 
-
+#  SISTEMA LAVA SMART
 class SistemaLavaSmart:
 
-    # Validar nombre
+    # VALIDAR NOMBRE DEL CLIENTE
     def pedir_nombre(self):
 
         while True:
@@ -13,9 +13,11 @@ class SistemaLavaSmart:
 
                 nombre = input("Nombre del cliente: ").strip()
 
+                # Verifica si el nombre está vacío
                 if nombre == "":
                     print("El nombre no puede estar vacío")
 
+                # Verifica que solo tenga letras
                 elif not nombre.replace(" ", "").isalpha():
                     print("El nombre solo debe contener letras")
 
@@ -27,7 +29,7 @@ class SistemaLavaSmart:
                 print("\nOperación cancelada por el usuario")
                 exit()
 
-    # Validar kilos
+    # VALIDAR KILOS DE ROPA
     def pedir_kilos(self):
 
         while True:
@@ -53,9 +55,11 @@ class SistemaLavaSmart:
                 print("\nOperación cancelada")
                 exit()
 
-    # Validar tipo de ropa
+
+    # VALIDAR TIPO DE ROPA
     def pedir_tipo_ropa(self):
 
+        # Diccionario que traduce las opciones
         mapa = {
             "n": "normal",
             "normal": "normal",
@@ -80,6 +84,7 @@ class SistemaLavaSmart:
                     "Seleccione: "
                 ).strip().lower()
 
+                # Si la opción existe en el diccionario
                 if tipo in mapa:
                     return mapa[tipo]
 
@@ -90,7 +95,7 @@ class SistemaLavaSmart:
                 print("\nEntrada cancelada. Intente nuevamente.")
                 continue
 
-    # Validar estrato
+    # VALIDAR ESTRATO
     def pedir_estrato(self):
 
         while True:
@@ -116,7 +121,8 @@ class SistemaLavaSmart:
                 print("\nOperación cancelada")
                 exit()
 
-    # Tipo de lavadora
+
+    # SELECCIONAR TIPO DE LAVADORA
     def pedir_tipo_lavadora(self):
 
         while True:
@@ -141,13 +147,15 @@ class SistemaLavaSmart:
                 print("\nEntrada cancelada. Intente nuevamente.")
                 continue
 
-    # Sistema principal
+
+    # SISTEMA PRINCIPAL
     def iniciar(self):
 
         print("\n" + "="*40)
         print("        SISTEMA LAVA SMART")
         print("="*40)
 
+        # Solicita los datos del cliente
         nombre = self.pedir_nombre()
 
         kilos = self.pedir_kilos()
@@ -158,8 +166,7 @@ class SistemaLavaSmart:
 
         tipo_lavadora = self.pedir_tipo_lavadora()
 
-        # Crear objeto según tipo (polimorfismo)
-
+        # CREACIÓN DEL OBJETO 
         if tipo_lavadora == 1:
 
             lavadora = LavadoraEstandar(kilos, tipo_ropa, estrato)
@@ -168,10 +175,8 @@ class SistemaLavaSmart:
 
             lavadora = LavadoraInteligente(kilos, tipo_ropa, estrato)
 
-        # Encender lavadora
-
+        # ENCENDER LAVADORA
         lavadora.encender()
 
-        # Ejecutar ciclo completo
-
+        # EJECUTAR CICLO COMPLETO
         lavadora.ciclo_terminado(nombre)

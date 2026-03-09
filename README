@@ -1,0 +1,37 @@
+Instalar la librería openpyxl
+
+Abrir la terminal o consola y ejecutar:
+
+pip install openpyxl
+
+
+
+Si el comando anterior no funciona, usar:
+
+pip3 install openpyxl
+
+
+
+Verificar que la librería quedó instalada
+
+En la terminal ejecutar:
+
+pip show openpyxl
+
+Si está instalada aparecerá algo similar a:
+
+Name: openpyxl
+Version: 3.x.x
+Location: ...
+
+
+
+===> Instalación automática usando requirements.txt <===
+
+El proyecto incluye un archivo llamado:
+
+requirements.txt
+
+Para instalar todas las dependencias automáticamente ejecutar:
+
+pip install -r requirements.txt 
