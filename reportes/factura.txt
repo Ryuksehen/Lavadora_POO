@@ -1,17 +1,18 @@
 ========== LAVA SMART ==========
          COMPROBANTE
 
-Cliente: ryuk
-Fecha: 08/03/2026 20:19
+Cliente: Miska
+Fecha: 10/03/2026 23:18
 
-Kilos lavados: 26.0
-Tipo de prenda: normal
+Kilos lavados: 40.0
+Tipo de prenda: vestidos
 Método de lavado: Inteligente
 
 Costo por kilo: $10000
-Costo sin IVA: $260000.0
-IVA (19%): $49400.0
+Costo sin IVA: $400000.0
+Recargo prenda especial (5%): $20000.0
+IVA (19%): $79800.0
 
-TOTAL A PAGAR: $309400.0
+TOTAL A PAGAR: $499800.0
 
 Gracias por usar Lava Smart

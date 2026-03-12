@@ -47,7 +47,9 @@ class LavadoraBase:
         self._tipo_lavadora = tipo_lavadora
         self._tiempo_lavado = 20
         self.__estado = "apagada"
+        # Nuevas variable
         self._ultimo_sonido = None # Lo guarda para que suene el ultimo sondios que se reprodujo antes de pausar
+        self._lavados_cliente = []
 
 
     # Lee una tecla del teclado
@@ -226,13 +228,9 @@ class LavadoraBase:
     # ENJUAGUE
     def _enjuagar(self):
 
-        print("\n¿Desea enjuagar la ropa?")
-        print("S → Sí")
-        print("N → No")
+        respuesta = self._validar_sn("\n¿Desea enjuagar la ropa? (s/n): ")
 
-        tecla = self._leer_tecla()
-
-        if tecla == "esc":
+        if respuesta == "n":
             print("Enjuague omitido")
             return
 
@@ -245,7 +243,7 @@ class LavadoraBase:
         time.sleep(2)
 
         print("Ropa enjuagada")
-        
+
         print("\nIniciando centrifugado...")
 
         SonidosLavadora.centrifugado(self._tipo_lavadora)
@@ -283,10 +281,11 @@ class LavadoraBase:
 
 
     # REPORTE DEL CLIENTE
-    def _mostrar_reporte_cliente(self, nombre):
+    """ def _mostrar_reporte_cliente(self, nombre):
 
         # Costo base del lavado
-        costo_base = self._kilos * self.PRECIO_KILO
+        kilos_totales = sum(k for _, k in self._lavados_cliente)
+        costo_base = kilos_totales * self.PRECIO_KILO
 
         recargo = 0
 
@@ -310,24 +309,37 @@ class LavadoraBase:
         # Tipo de lavadora
         metodo = "Inteligente" if self._tipo_lavadora == "inteligente" else "Estándar"
 
-        print("\n========== REPORTE CLIENTE ==========")
+        print("\n" + "="*50)
+        print("              REPORTE CLIENTE")
+        print("="*50)
 
-        print("Cliente:", nombre)
-        print("Fecha:", fecha)
-        print("Kilos lavados:", self._kilos)
-        print("Tipo de prenda:", self._tipo_ropa)
-        print("Método de lavado:", metodo)
+        print(f"Cliente           : {nombre}")
+        print(f"Fecha             : {fecha}")
+        print("Prendas lavadas:")
 
-        print("Costo por kilo:", self.PRECIO_KILO)
-        print("Costo sin IVA:", round(costo_base, 2))
+        for ropa, kilos in self._lavados_cliente:
+            print(f" - {ropa} : {int(kilos)} kg")
+        print(f"\nKilos totales     : {int(kilos_totales)} kg")
+        print(f"Método de lavado  : {metodo}")
+
+        print("-"*50)
+
+        print(f"Costo por kilo    : ${self.PRECIO_KILO:,.2f}")
+        print(f"Costo base        : ${costo_base:,.2f}")
 
         if recargo > 0:
-            print("Recargo prenda especial:", round(recargo, 2))
+            print(f"Recargo especial  : ${recargo:,.2f}")
 
-        print("IVA:", round(iva, 2))
-        print("TOTAL A PAGAR:", round(total, 2))
+        print(f"IVA (19%)         : ${iva:,.2f}")
 
-        print("\nGracias por usar Lava Smart")
+        print("-"*50)
+
+        print(f"TOTAL A PAGAR     : ${total:,.2f}")
+
+        print("="*50)
+        print("Gracias por usar Lava Smart")
+        print("="*50)
+        
 
 
         # Diccionario con datos para los reportes
@@ -343,13 +355,16 @@ class LavadoraBase:
             "iva": round(iva, 2),
             "total": round(total, 2),
             "ganancia": round(ganancia, 2),
-            "energia": round(energia, 2)
+            "energia": round(energia, 2),
+            "agua": self._kilos * 10
         }
 
         # Genera archivos de reporte
         Reportes.generar_factura_txt(datos)
         Reportes.generar_excel(datos)
 
+        return datos
+ """
 
     # CICLO COMPLETO DE LAVADO
     def ciclo_terminado(self, nombre):
@@ -366,7 +381,7 @@ class LavadoraBase:
             continuar = self.lavar()
 
             if continuar is False:
-                return
+                return None
 
             # Enjuague
             self._enjuagar()
@@ -381,11 +396,13 @@ class LavadoraBase:
 
             # Sonido final
             SonidosLavadora.fin(self._tipo_lavadora)
-
-            print("\nGenerando reportes...\n")
-
-            # Genera factura y reporte
-            self._mostrar_reporte_cliente(nombre)
+            
+            self._lavados_cliente.append((self._tipo_ropa, self._kilos))
+            return {
+                "tipo_ropa": self._tipo_ropa,
+                "kilos": self._kilos,
+                "metodo": "Inteligente" if self._tipo_lavadora == "inteligente" else "Estándar"
+            }
 
         # Manejo de interrupciones del usuario
         except (EOFError, KeyboardInterrupt):

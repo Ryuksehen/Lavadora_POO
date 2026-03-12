@@ -53,13 +53,16 @@ class LavadoraInteligente(LavadoraBase):
 
     # CONEXIÓN WIFI
     def conectar_wifi(self):
+        
+        if self._wifi:
+            print("La lavadora ya está conectada a WiFi")
+            return
 
         print("\nConexión remota de la lavadora")
 
         while True:
 
             try:
-
                 # Solicita nombre de la red WiFi
                 red = input("Ingrese nombre de red WiFi: ").strip()
 
@@ -150,12 +153,17 @@ class LavadoraInteligente(LavadoraBase):
                 else:
 
                     print("Opción inválida")
+                    
+                print(f"\nTiempo estimado de lavado: {self._tiempo_lavado} minutos")
+                return
 
             except (EOFError, KeyboardInterrupt):
 
                 print("\nSelección cancelada")
 
                 return
+            
+            
 
 
     # LAVADO INTELIGENTE (
@@ -163,25 +171,18 @@ class LavadoraInteligente(LavadoraBase):
 
         print("\nModo de lavado: INTELIGENTE")
 
-        # Si no está conectada a WiFi se solicita conexión
         if not self._wifi:
             self.conectar_wifi()
 
-        # Muestra los modos de lavado inteligente
         self.mostrar_opciones_lavado()
 
         print("\nIniciando ciclo inteligente optimizado...")
 
-        # Ejecuta la simulación del tambor
         continuar = self._simular_tambor()
 
-        # Si el usuario cancela el lavado
         if not continuar:
-            
             SonidosLavadora.reproducir(self._tipo_lavadora, "error")
-
             print("Lavado cancelado por el usuario")
-
             return False
 
         print("Lavado inteligente finalizado")
